@@ -1,11 +1,13 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import GaugeStyles from '../styles/Gauge.module.css'
+import { UpdateValues } from './UpdateValues'
 
 export const Gauge = () => {
     const [gaugeValues, setGaugeValues] = useState([])
     const [percentage, setPercentage] = useState('')
     const [rotate, setRotate] = useState('')
+    const [showUpdatePopUp, setShowUpdatePopUp] = useState(false)
 
     useEffect(() => {
         getDefaultValues()
@@ -61,8 +63,11 @@ export const Gauge = () => {
 
     return (
         <>
+        {showUpdatePopUp && <UpdateValues gaugeValues={gaugeValues} 
+            setGaugeValues={setGaugeValues} setShowUpdatePopUp={setShowUpdatePopUp} /> }
         <div className={GaugeStyles.container}>
         <button type="button" onClick={()=>getRandomValues()}>Get Random Values</button>
+        <button type="button" onClick={()=>setShowUpdatePopUp(true)}>Update Values</button>
             <div className={GaugeStyles.body}>
                 <div className={GaugeStyles.fill} 
                     style={{transform:`rotate(${rotate}turn)`}}>
