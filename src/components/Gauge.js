@@ -11,13 +11,17 @@ export const Gauge = () => {
         getDefaultValues()
     },[])
 
+    useEffect(() => {
+        calculateValues()
+    },[gaugeValues]) // call a function everytime gaugeValues changes 
+
     // get the default sample values for the gauge 
     const getDefaultValues = async () => {
         try {
             const res = await axios.get('https://widgister.herokuapp.com/challenge/frontend?fixed=1')
 
             setGaugeValues(res.data)
-            calculateValues(res.data)
+            //calculateValues(res.data)
         }catch(err){
             console.log(err)
         }
@@ -28,18 +32,31 @@ export const Gauge = () => {
         try {
             const res = await axios.get('https://widgister.herokuapp.com/challenge/frontend')
             const data = res.data 
+
+            if(data.min > data.max || data.min > data.value){
+                alert('Inaccurate data \nPlease click the button again')
+                return false
+            }else{
+                setGaugeValues(data.unit == undefined ? {...data, unit : 'GBP'} : data)
+                //calculateValues(data)
+            }
     
-            setGaugeValues(data.unit == undefined ? {...data, unit : 'GBP'} : data)
-            calculateValues(data)
         }catch(err) {
             console.log(err)
         }
     }
 
     // calculate percentage and rotate for the display  
-    const calculateValues = (data) => {
-        setPercentage(((data.value / data.max) * 100).toFixed(2))
-        setRotate(((data.value / data.max) / 2).toFixed(2))
+    const calculateValues = () => {
+        const range = gaugeValues.max - gaugeValues.min
+        const target = gaugeValues.value - gaugeValues.min
+
+        if(range < 0 || target < 0){ // when random values are inaccurate e.g min is bigger than max 
+            return false 
+        }else{
+            setPercentage(((target / range) * 100).toFixed(2))
+            setRotate(((target / range) / 2).toFixed(2))
+        }
     }
 
     return (

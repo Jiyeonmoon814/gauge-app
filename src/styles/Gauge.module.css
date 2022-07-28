@@ -5,6 +5,25 @@
     color: #131313;
 }
 
+.container button {
+    width: 150px;
+    height: 30px;
+    background: #1F609E;
+    border: none;
+    border-radius: 5px;
+    margin: 0 10px 30px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.container button:active {
+    transform: scale(0.98);
+}
+
+.container button:hover {
+    background: #C94235;
+}
+
 .body {
     border-top-left-radius: 100% 200%;
     border-top-right-radius: 100% 200%;
