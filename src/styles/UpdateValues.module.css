@@ -23,6 +23,13 @@
     text-align: center;
 }
 
+.container p {
+    text-align: center;
+    font-size: 12px;
+    margin-top: -10px;
+    color: red;
+}
+
 .main {
     display: flex;
     flex: 1;
