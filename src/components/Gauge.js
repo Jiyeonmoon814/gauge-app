@@ -3,22 +3,35 @@ import { useEffect, useState } from 'react'
 import GaugeStyles from '../styles/Gauge.module.css'
 
 export const Gauge = () => {
-    const [gaugeValue, setGaugeValue] = useState([])
+    const [gaugeValues, setGaugeValues] = useState([])
     const [percentage, setPercentage] = useState('')
     const [rotate, setRotate] = useState('')
 
     useEffect(() => {
-        getDefaultValue()
+        getDefaultValues()
     },[])
 
-    // get the default sample payload 
-    const getDefaultValue = async () => {
+    // get the default sample values for the gauge 
+    const getDefaultValues = async () => {
         try {
             const res = await axios.get('https://widgister.herokuapp.com/challenge/frontend?fixed=1')
 
-            setGaugeValue(res.data)
+            setGaugeValues(res.data)
             calculateValues(res.data)
         }catch(err){
+            console.log(err)
+        }
+    }
+
+    // get randome values for the gauge
+    const getRandomValues = async () => {
+        try {
+            const res = await axios.get('https://widgister.herokuapp.com/challenge/frontend')
+            const data = res.data 
+    
+            setGaugeValues(data.unit == undefined ? {...data, unit : 'GBP'} : data)
+            calculateValues(data)
+        }catch(err) {
             console.log(err)
         }
     }
@@ -32,6 +45,7 @@ export const Gauge = () => {
     return (
         <>
         <div className={GaugeStyles.container}>
+        <button type="button" onClick={()=>getRandomValues()}>Get Random Values</button>
             <div className={GaugeStyles.body}>
                 <div className={GaugeStyles.fill} 
                     style={{transform:`rotate(${rotate}turn)`}}>
@@ -39,12 +53,12 @@ export const Gauge = () => {
                         {percentage}%
                     </span>
                 </div>
-                <div className={GaugeStyles.cover}>{gaugeValue.unit} {gaugeValue.value}
+                <div className={GaugeStyles.cover}>{gaugeValues.unit} {gaugeValues.value}
                 </div>
             </div>
             <div className={GaugeStyles.numbers}>
-                <p>{gaugeValue.unit} {gaugeValue.min}</p>
-                <p>{gaugeValue.unit} {gaugeValue.max}</p>
+                <p>{gaugeValues.unit} {gaugeValues.min}</p>
+                <p>{gaugeValues.unit} {gaugeValues.max}</p>
             </div>
         </div>
         </>
