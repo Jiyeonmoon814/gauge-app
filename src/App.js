@@ -1,7 +1,14 @@
-import React from 'react'
+import { Gauge } from "./components/Gauge"
+import { Header } from "./components/Header"
+import AppStyles from './styles/App.module.css'
 
-export const App = () => {
+const App = () => {
   return (
-    <div>App</div>
+    <div className={AppStyles.container}>
+      <Header />
+      <Gauge />
+    </div>
   )
 }
+
+export default App
